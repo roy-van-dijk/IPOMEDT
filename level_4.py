@@ -1,4 +1,4 @@
-[21:17, 1/23/2018] Stefan: import time 
+import time 
 import RPi.GPIO as GPIO 
 import threading
 
