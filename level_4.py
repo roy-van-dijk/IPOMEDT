@@ -13,9 +13,14 @@ sensorm = 15
 sensorr = 18
 
 knop = 26
-knopl = 13
-knopr = 6
+knopl = 6
 knopm = 19
+knopr = 13
+
+lichtRA = 5
+lichtRV = 12
+lichtLA = 25
+lichtLV = 24
 
 ##Seq voor en achter uit
 SeqVoorAchter1 = [[1,0,0,0],[1,1,0,0],[0,1,0,0],[0,1,1,0],[0,0,1,0],[0,0,1,1],[0,0,0,1],[1,0,0,1]]
@@ -38,6 +43,16 @@ GPIO.setup(knop, GPIO.IN, GPIO.PUD_UP)
 GPIO.setup(knopl, GPIO.IN, GPIO.PUD_UP)
 GPIO.setup(knopr, GPIO.IN, GPIO.PUD_UP)
 GPIO.setup(knopm, GPIO.IN, GPIO.PUD_UP)
+
+GPIO.setup(lichtRA,GPIO.OUT)
+GPIO.setup(lichtRV,GPIO.OUT)
+GPIO.setup(lichtLA,GPIO.OUT)
+GPIO.setup(lichtLV,GPIO.OUT)
+
+GPIO.output(lichtRA, GPIO.LOW)
+GPIO.output(lichtRV, GPIO.LOW)
+GPIO.output(lichtLA, GPIO.LOW)
+GPIO.output(lichtLV, GPIO.LOW)
     
 stepcountVoorAchter1 = len(SeqVoorAchter1)
 stepcountVoorAchter2 = len(SeqVoorAchter2)
@@ -128,14 +143,59 @@ def start():
                 step = step + 1
         time.sleep(delay)
 
+knipperstart = 0
+lichtknipper = True
+GPIO.output(lichtRA, GPIO.HIGH)
+GPIO.output(lichtRV, GPIO.HIGH)
+GPIO.output(lichtLA, GPIO.HIGH)
+GPIO.output(lichtLV, GPIO.HIGH)
+
 while True:
     if (not GPIO.input(knop)) :
+        kruispunt = False
         start()
-        break
     if (not GPIO.input(knopr)) :
         richting = "rechts"
+        GPIO.output(lichtRA, GPIO.HIGH)
+        GPIO.output(lichtRV, GPIO.HIGH)
+        GPIO.output(lichtLA, GPIO.LOW)
+        GPIO.output(lichtLV, GPIO.LOW)
     if (not GPIO.input(knopm)) :
         richting = "vooruit"
+        GPIO.output(lichtRA, GPIO.HIGH)
+        GPIO.output(lichtRV, GPIO.HIGH)
+        GPIO.output(lichtLA, GPIO.HIGH)
+        GPIO.output(lichtLV, GPIO.HIGH)
     if (not GPIO.input(knopl)) : 
         richting = "links"
+        GPIO.output(lichtRA, GPIO.LOW)
+        GPIO.output(lichtRV, GPIO.LOW)
+        GPIO.output(lichtLA, GPIO.HIGH)
+        GPIO.output(lichtLV, GPIO.HIGH)
+    knipperstart = knipperstart + 1
+    if (knipperstart > 10) :
+        knipperstart = 0
+        if (lichtknipper == True) :
+            lichtknipper = False
+            GPIO.output(lichtRA, GPIO.LOW)
+            GPIO.output(lichtRV, GPIO.LOW)
+            GPIO.output(lichtLA, GPIO.LOW)
+            GPIO.output(lichtLV, GPIO.LOW)
+        else:
+            lichtknipper = True
+            if (richting == "rechts") :
+                GPIO.output(lichtRA, GPIO.HIGH)
+                GPIO.output(lichtRV, GPIO.HIGH)
+                GPIO.output(lichtLA, GPIO.LOW)
+                GPIO.output(lichtLV, GPIO.LOW)
+            if (richting == "vooruit") :
+                GPIO.output(lichtRA, GPIO.HIGH)
+                GPIO.output(lichtRV, GPIO.HIGH)
+                GPIO.output(lichtLA, GPIO.HIGH)
+                GPIO.output(lichtLV, GPIO.HIGH)
+            if (richting == "links") : 
+                GPIO.output(lichtRA, GPIO.LOW)
+                GPIO.output(lichtRV, GPIO.LOW)
+                GPIO.output(lichtLA, GPIO.HIGH)
+                GPIO.output(lichtLV, GPIO.HIGH)
     time.sleep(0.1)
