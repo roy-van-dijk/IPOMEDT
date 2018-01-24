@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>GREEKGODX Bezorgsysteem</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: sans-serif;
+		}
+		.clearfix::after {
+		    content: "";
+		    clear: both;
+		    display: table;
+		}
+		.wrapper{
+			max-width: 1000px;
+			margin: 0px auto;
+			padding-left: 50px;
+			padding-right: 50px;
+		}
+		.button{
+			width: 31%;
+			height: 200px;
+			float: left;
+			margin: 1%;
+			margin-top: 50px;
+			text-align: center;
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+			border-radius: 10px;
+			border: 10px solid rgba(0,0,0,0);
+			cursor: pointer;
+		}
+		.button:hover{
+			background-color: rgba(0,0,0,0.3);
+		}
+		
+		.text{
+			width: 100%;
+			font-size: 24px;
+			border-radius: 10px;
+			padding: 5px;
+			color: white;
+			font-weight: bold;
+			background-color: rgba(0,0,0,0.3);
+			display: none;
+		}
+		#starbucks{
+			background-image: url('starbucks.svg');
+		}
+		#apple-store{
+			background-image: url('apple.svg');
+		}
+		#science-center{
+			background-image: url('science.svg');
+		}
+		.confirmbuttons{
+			width: 200px;
+			text-align: center;
+			font-size: 24px;
+			margin: 10px auto;
+			height: auto;
+			border-radius: 10px;
+			padding: 10px;
+			cursor: pointer;
+			display: none;
+		}
+		#cancel{
+			background-color: red;
+		}
+		#start{
+			background-color: lightgreen;
+		}
+		#new{
+			background-color: lightblue;
+		}
+		#bigtext{
+			width: 100%;
+    		text-align: center;
+    		font-size: 50px;
+		}
+		@media (max-width: 1000px){
+			.button{
+				float: none;
+				width: 50%;
+    			margin: 10px auto;
+			}
+		}
+
+	</style>
+</head>
+<body>
+	<div class="wrapper clearfix">
+		<div id="bigtext">Waar moet de pizza heen?</div>
+
+		<div class="buttons">
+			<div class="button" id="starbucks">
+				<div class="text">Starbucks</div>
+			</div>
+			<div class="button" id="apple-store">
+				<div class="text">Apple Store</div>
+			</div>
+			<div class="button" id="science-center">
+				<div class="text">Science Center</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="confirmbuttons" id="cancel">
+		<span>Nee, ga terug</span>
+	</div>
+	<div class="confirmbuttons" id="start">
+		<span>Ja, start</span>
+	</div>
+	<div class="confirmbuttons" id="new">
+		<span>Nieuwe opdracht</span>
+	</div>
+
+	<script>
+		// var exampleSocket = new WebSocket("ws://www.example.com/socketserver", "protocolOne");
+
+		document.getElementById("starbucks").addEventListener("click", hideButton);
+		document.getElementById("apple-store").addEventListener("click", hideButton);
+		document.getElementById("science-center").addEventListener("click", hideButton);
+		document.getElementById("start").addEventListener("click", start);
+		document.getElementById("new").addEventListener("click", function(){
+			location.reload();
+		});
+		document.getElementById("cancel").addEventListener("click", function(){
+			location.reload();
+		});
+
+		var locationClicked;
+
+		function hideButton(){
+			var buttons = document.getElementsByClassName("button");
+
+			for(var i = 0; i < buttons.length; i++){
+				buttons[i].setAttribute("style", "display: none");
+			}
+			
+			this.setAttribute("style", "display: block; width: 100%");
+			locationClicked = this.id;
+
+			document.getElementById("cancel").setAttribute("style", "display: block");
+			document.getElementById("start").setAttribute("style", "display: block");
+			document.getElementById("bigtext").innerHTML = "Wil je naar " + this.children[0].innerHTML + " bezorgen?";
+		}
+
+		function start(){
+			// exampleSocket.send(locationClicked);
+
+			document.getElementById("cancel").setAttribute("style", "display: none");
+			document.getElementById("start").setAttribute("style", "display: none");
+			document.getElementById("bigtext").innerHTML = "De robot gaat bezorgen!";
+			document.getElementById("new").setAttribute("style", "display: block");
+		}
+	</script>
+
+</body>
+</html>
