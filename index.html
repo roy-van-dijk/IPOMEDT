@@ -122,8 +122,7 @@
 	</div>
 
 	<script>
-		// var exampleSocket = new WebSocket("ws://www.example.com/socketserver", "protocolOne");
-
+		var socket = new WebSocket("ws://192.168.4.1:9001");
 		document.getElementById("starbucks").addEventListener("click", hideButton);
 		document.getElementById("apple-store").addEventListener("click", hideButton);
 		document.getElementById("science-center").addEventListener("click", hideButton);
@@ -153,7 +152,7 @@
 		}
 
 		function start(){
-			// exampleSocket.send(locationClicked);
+			socket.send(locationClicked);
 
 			document.getElementById("cancel").setAttribute("style", "display: none");
 			document.getElementById("start").setAttribute("style", "display: none");
