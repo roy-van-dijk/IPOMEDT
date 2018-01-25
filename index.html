@@ -26,7 +26,6 @@
 			height: 400px;
 			float: left;
 			margin: 1%;
-			margin-top: 50px;
 			text-align: center;
 			background-size: contain;
 			background-position: center;
@@ -59,7 +58,7 @@
 			background-image: url('science.svg');
 		}
 		.confirmbuttons{
-			width: 250px;
+			width: 47.5%;
 			text-align: center;
 			font-size: 28px;
 			line-height: 130px;
@@ -69,20 +68,42 @@
 			padding: 10px;
 			cursor: pointer;
 			display: none;
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+			float: left;
+			margin-left: 10px;
+			margin-right: 10px;
 		}
 		#cancel{
 			background-color: red;
+			background-image: url('back.svg');
 		}
 		#start{
 			background-color: lightgreen;
+			background-image: url('check.svg');
 		}
 		#new{
 			background-color: lightblue;
+			background-image: url('back.svg');
 		}
-		#bigtext{
-			width: 100%;
-    		text-align: center;
-    		font-size: 50px;
+		.arrow{
+			width: 33%;
+			background-image: url('arrow.svg');
+			height: 150px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			float: left;
+			animation: bounce 1.5s infinite ease-in-out;
+		}
+		#arrows{
+			height: 200px;
+		}
+		@keyframes bounce{
+			0%{ margin-top: 0px; }
+			50%{ margin-top: 50px; }
+			100%{ margin-top: 0px; }
 		}
 		@media (max-width: 1000px){
 			.button{
@@ -90,15 +111,22 @@
 				width: 50%;
     			margin: 10px auto;
 			}
+			#arrows{
+				display: none;
+			}
 		}
 
 	</style>
 </head>
 <body>
 	<div class="wrapper clearfix">
-		<div id="bigtext">Waar moet de pizza heen?</div>
+		<div id="arrows" class="clearfix">
+			<div class="arrow"></div>
+			<div class="arrow"></div>
+			<div class="arrow"></div>
+		</div>
 
-		<div class="buttons">
+		<div class="buttons clearfix">
 			<div class="button" id="starbucks">
 				<div class="text">Starbucks</div>
 			</div>
@@ -111,18 +139,13 @@
 		</div>
 	</div>
 
-	<div class="confirmbuttons" id="cancel">
-		<span>Nee, ga terug</span>
-	</div>
-	<div class="confirmbuttons" id="start">
-		<span>Ja, start</span>
-	</div>
-	<div class="confirmbuttons" id="new">
-		<span>Nieuwe opdracht</span>
-	</div>
+	<div class="confirmbuttons" id="cancel"></div>
+	<div class="confirmbuttons" id="start"></div>
+	<div class="confirmbuttons" id="new"></div>
 
 	<script>
 		var socket = new WebSocket("ws://192.168.4.1:9001");
+
 		document.getElementById("starbucks").addEventListener("click", hideButton);
 		document.getElementById("apple-store").addEventListener("click", hideButton);
 		document.getElementById("science-center").addEventListener("click", hideButton);
@@ -143,12 +166,13 @@
 				buttons[i].setAttribute("style", "display: none");
 			}
 
+			document.getElementById("arrows").setAttribute("style", "display: none");
 			this.setAttribute("style", "display: block; width: 100%");
+			
 			locationClicked = this.id;
 
-			document.getElementById("cancel").setAttribute("style", "display: block");
-			document.getElementById("start").setAttribute("style", "display: block");
-			document.getElementById("bigtext").innerHTML = "Wil je naar " + this.children[0].innerHTML + " bezorgen?";
+			document.getElementById("cancel").setAttribute("style", "display: block;");
+			document.getElementById("start").setAttribute("style", "display: block;");
 		}
 
 		function start(){
@@ -156,8 +180,7 @@
 
 			document.getElementById("cancel").setAttribute("style", "display: none");
 			document.getElementById("start").setAttribute("style", "display: none");
-			document.getElementById("bigtext").innerHTML = "De robot gaat bezorgen!";
-			document.getElementById("new").setAttribute("style", "display: block");
+			document.getElementById("new").setAttribute("style", "display: block; margin: 0px auto; float: none");
 		}
 	</script>
 
