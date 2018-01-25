@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+	<meta name="author" content="GREEKGODX">
+	<meta charset="utf-8">
+	<title>Pizza bezorger</title>
+	<style>
+		body{
+			background-color: #E84B4B;
+			font-family: "Segoe UI",Arial,sans-serif;
+		}
+
+		#messageHolder{
+			text-align: center;
+			font-size: 3vw;
+			margin: 3vh auto;
+			color: white;
+			width: 50vw;
+		}
+	</style>
+</head>
+<body>
+	<div id="messageHolder">
+		<div id="wachtenopbestemming">Wachten op bestemming</div>
+		<hr>
+		<div id="klaaromtestarten">Klaar om te starten</div>
+		<hr>
+		<div id="onderwegnaarkruispunt">Onderweg naar kruispunt</div>
+		<hr>
+		<div id="kruispuntgevonden">Kruispunt gevonden</div>
+		<hr>
+		<div id="onderwegnaarbestemming">Onderweg naar bestemming</div>
+		<hr>
+		<div id="bestemmingbereikt">Bestemming bereikt</div>
+	</div>
+	<div onclick="nextStatus()">Next</div>
+</body>
+<script>
+	var socket = io();
+      socket.on("voortgang", function (data){
+       nextStatus(data)
+      });
+	function nextStatus(statusID) {
+	    document.getElementById('status' + statusID).style.color = '#66ff66';
+	    document.getElementById('status' + statusID).style.fontWeight = "600";
+	}
+
+	function reload() {
+		location.reload();
+	}
+</script>
+</html>

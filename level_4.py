@@ -1,6 +1,7 @@
 import time 
 import RPi.GPIO as GPIO
 import threading
+import urllib.request
 
 #Geen Waarschuwingen en juiste schema voor pins
 GPIO.setmode(GPIO.BCM) 
@@ -29,8 +30,9 @@ richting = "vooruit"
 
 #Standaardwaarde lichtknipperen
 lichtknipper = True
+lichtenaan = True
 
-##Sequenses
+#Sequences
 SeqVoorAchter1 = [[1,0,0,0],[1,1,0,0],[0,1,0,0],[0,1,1,0],[0,0,1,0],[0,0,1,1],[0,0,0,1],[1,0,0,1]]
 SeqVoorAchter2 = [[0,0,0,1],[0,0,1,1],[0,0,1,0],[0,1,1,0],[0,1,0,0],[1,1,0,0],[1,0,0,0],[1,0,0,1]]
 
@@ -151,8 +153,10 @@ def rijden():
             #Controleren op tweede keer kruispunt
             if (kruispuntGehad) :
                 #Tweede keer kruispunt dus stoppen
+                urllib.request.urlopen("http://127.0.0.1:3000/bestemmingbereikt/").read()
                 break
             else :
+                urllib.request.urlopen("http://127.0.0.1:3000/kruispuntgevonden/").read()
                 if (richting == "links") :
                     #Handmatige bocht op kruising
                     draaiwiel("vooruit", 3)
@@ -166,6 +170,7 @@ def rijden():
                     draaiwiel("vooruit", 3)
                     draaiwiel("rechts", 8)
                     draaiwiel("vooruit", 2)
+                urllib.request.urlopen("http://127.0.0.1:3000/onderwegnaarbestemming/").read()
                 kruispuntGehad = True
         #Naar links gedetecteerd
         elif (not GPIO.input(sensorl) and GPIO.input(sensorr)) :
@@ -186,7 +191,8 @@ def rijden():
 def knipper() :
     global lichtrichting
     global lichtknipper
-    while True:
+    global lichtenaan
+    while lichtenaan:
         if (lichtknipper):
             lichtknipper = False
             if (lichtrichting == "links"):
@@ -205,26 +211,32 @@ lichtenknipperen = threading.Thread(target=knipper)
 lichtenknipperen.start()
 
 #Start code
+urllib.request.urlopen("http://127.0.0.1:3000/wachtenopbestemming/").read()
 while True:
     #Knop starten ingedrukt
     if (not GPIO.input(knop)) :
         kruispunt = False
+        urllib.request.urlopen("http://127.0.0.1:3000/onderwegnaarkruispunt/").read()
         rijden()
-        richting = "vooruit"
+        lichtenaan = False
+        break
     #Knop rechts ingedrukt
     elif (not GPIO.input(knopr)) :
         richting = "rechts"
         lichtenknipperen = True
         lichtjesRechts()
+        urllib.request.urlopen("http://127.0.0.1:3000/klaaromtestarten/").read()
     #Knop vooruit ingedrukt
     elif (not GPIO.input(knopm)) :
         richting = "vooruit"
         lichtenknipperen = True
         lichtjesAan()
+        urllib.request.urlopen("http://127.0.0.1:3000/klaaromtestarten/").read()
     #Knop links ingedrukt
     elif (not GPIO.input(knopl)) : 
         richting = "links"
         lichtenknipperen = True
         lichtjesLinks()
+        urllib.request.urlopen("http://127.0.0.1:3000/klaaromtestarten/").read()
     lichtrichting = richting
     time.sleep(0.1)
